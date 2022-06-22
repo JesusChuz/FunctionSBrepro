@@ -1,4 +1,3 @@
-# .NET Core Function App to Windows on Azure
 # Build a .NET Core function app and deploy it to Azure as a Windows function App.
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/en-us/azure/devops/pipelines/languages/dotnet-core
@@ -56,28 +55,11 @@ stages:
 
     - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
       artifact: drop
-
-- stage: Deploy
-  displayName: Deploy stage
-  dependsOn: Build
-  condition: succeeded()
-
-  jobs:
-  - deployment: Deploy
-    displayName: Deploy
-    environment: 'development'
-    pool:
-      vmImage: $(vmImageName)
-
-    strategy:
-      runOnce:
-        deploy:
-
-          steps:
-          - task: AzureFunctionApp@1
-            displayName: 'Azure functions app deploy'
-            inputs:
-              azureSubscription: '$(azureSubscription)'
-              appType: functionApp
-              appName: $(functionAppName)
-              package: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
+    - task: AzureFileCopy@4
+      displayName: 'Upload to Storage account'
+      inputs:
+        azureSubscription: 'MAIC - TEK Experts CR - v-gengon Group#2(bddf3c59-769c-49a7-a515-6310ce264e6a)'
+        SourcePath: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+        Destination: 'AzureBlob'
+        storage: 'sajesumesasrfp'
+        ContainerName: 'code'
