@@ -55,7 +55,7 @@ stages:
 
     - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
       artifact: drop
-    - task: AzureFileCopy@4
+    - task: AzureFileCopy@2
       displayName: 'Upload to Storage account'
       inputs:
         azureSubscription: 'MAIC - TEK Experts CR - v-gengon Group#2(bddf3c59-769c-49a7-a515-6310ce264e6a)'
